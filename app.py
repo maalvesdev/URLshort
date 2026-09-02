@@ -13,6 +13,22 @@ def generate_short_code(length=6):
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
 
+def init_db():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS urls (
+            short_code TEXT PRIMARY KEY,
+            original_url TEXT NOT NULL,
+            expires_at INTEGER
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Run this immediately when the app starts
+init_db()
+
 @app.route("/")
 def home():
     return render_template("index.html")
