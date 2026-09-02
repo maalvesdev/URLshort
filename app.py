@@ -36,7 +36,7 @@ def home():
 def shorten_url():
     data = request.get_json()
     original_url = data.get("original_url")
-    custom_alias = data.get("custom_alias")
+    custom_url = data.get("custom_url")
     expires_in_hours = data.get("expires_in_hours")
 
     if not original_url.startswith(("http://", "https://")):
@@ -46,12 +46,12 @@ def shorten_url():
     cursor = conn.cursor()
 
     # CUSTOM ALIAS LOGIC
-    if custom_alias:
-        cursor.execute("SELECT short_code FROM urls WHERE short_code = ?", (custom_alias,))
+    if custom_url:
+        cursor.execute("SELECT short_code FROM urls WHERE short_code = ?", (custom_url,))
         if cursor.fetchone():
             conn.close()
             return jsonify({"error": "That custom alias is already taken!"}), 400
-        short_code = custom_alias
+        short_code = custom_url
     else:
         short_code = generate_short_code()
 
