@@ -3,48 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>URL Shortener</title>
-    <style>
-        :root {
-            --bg-color: #0b0c0e;
-            --card-bg: #191b1f;
-            --text-color: #f8fafc;
-            --accent-color: #3b82f6;
-            --border-color: #334155;
-            --input-bg: #32363f;
-        }
-
-        body.light-mode {
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #0f172a;
-            --accent-color: #2563eb;
-            --border-color: #e2e8f0;
-            --input-bg: #ffffff;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
-            font-family: sans-serif;
-        }
-
-        .container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 8px;
-            max-width: 500px;
-            margin: 50px auto;
-        }
-
-        input {
-            background-color: var(--input-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-        }
-    </style>
 </head>
 <body>
 
@@ -54,9 +14,9 @@
     <h2>URL Shortener</h2>
     <div id="errorMsg" class="error"></div>
     
-    <input type="url" id="longUrl" placeholder="Paste your long link here..." required>
+    <input type="url" id="longLink" placeholder="Paste your long link here" required>
     
-    <input type="text" id="customAlias" placeholder="Custom alias (optional)">
+    <input type="text" id="customLink" placeholder="Custom Link (optional)">
     
     <select id="expiryTime">
         <option value="">Never expire</option>
@@ -70,64 +30,7 @@
     <div id="result"></div>
 </div>
 
-<script>
-    const toggleBtn = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme');
-
-    if (currentTheme === 'light') {
-        document.body.classList.add('light-mode');
-        toggleBtn.textContent = '🌙 Dark Mode';
-    }
-
-    toggleBtn.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-
-        let theme = 'dark';
-        if (document.body.classList.contains('light-mode')) {
-            theme = 'light';
-            toggleBtn.textContent = '🌙 Dark Mode';
-        } else {
-            toggleBtn.textContent = '☀️ Light Mode';
-        }
-
-        localStorage.setItem('theme', theme);
-    });
-
-    async function shortenUrl() {
-        const urlInput = document.getElementById('longUrl').value;
-        const customAlias = document.getElementById('customAlias').value;
-        const expiryTime = document.getElementById('expiryTime').value;
-        
-        const resultDiv = document.getElementById('result');
-        const errorDiv = document.getElementById('errorMsg');
-
-        resultDiv.innerHTML = "";
-        errorDiv.innerText = "";
-
-        if (!urlInput) {
-            errorDiv.innerText = "Please enter a URL!";
-            return;
-        }
-
-        const response = await fetch('/api/shorten', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                original_url: urlInput,
-                custom_alias: customAlias,
-                expires_in_hours: expiryTime
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            resultDiv.innerHTML = `Success! <br><br> <a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
-        } else {
-            errorDiv.innerText = data.error || "Something went wrong.";
-        }
-    }
-</script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 </html>
