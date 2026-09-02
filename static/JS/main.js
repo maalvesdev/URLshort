@@ -1,5 +1,6 @@
 const toggleBtn = document.getElementById('theme-toggle');
 const currentTheme = localStorage.getItem('theme');
+
 if (currentTheme === 'light') {
     document.body.classList.add('light-mode');
     toggleBtn.textContent = 'Dark Mode';
