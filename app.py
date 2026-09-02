@@ -71,7 +71,7 @@ def shorten_url():
 
     return jsonify({
         "short_code": short_code,
-        "short_url": f"http://127.0.0.1:5000/{short_code}"
+        "short_url": f"{request.host_url}{short_code}"
     }), 201
 
 @app.route("/<short_code>")
