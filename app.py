@@ -38,6 +38,7 @@ def shorten_url():
     original_url = data.get("original_url")
     custom_url = data.get("custom_url")
     expires_in_hours = data.get("expires_in_hours")
+    original_url = data.get("original_url")
 
     if not original_url.startswith(("http://", "https://")):
         original_url = "https://" + original_url
