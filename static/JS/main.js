@@ -20,7 +20,7 @@ toggleBtn.addEventListener('click', () => {
 
 async function shortenUrl() {
     const urlInput = document.getElementById('longUrl').value;
-    const customAlias = document.getElementById('customAlias').value;
+    const customUrl = document.getElementById('customUrl').value;
     const expiryTime = document.getElementById('expiryTime').value;
     
     const resultDiv = document.getElementById('result');
@@ -36,7 +36,7 @@ async function shortenUrl() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
             original_url: urlInput,
-            custom_alias: customAlias,
+            custom_url: customUrl,
             expires_in_hours: expiryTime
         })
     });

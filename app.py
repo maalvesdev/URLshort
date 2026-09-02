@@ -39,8 +39,8 @@ def shorten_url():
     custom_alias = data.get("custom_alias")
     expires_in_hours = data.get("expires_in_hours")
 
-    if not original_url:
-        return jsonify({"error": "Please provide an original_url"}), 400
+    if not original_url.startswith(("http://", "https://")):
+        original_url = "https://" + original_url
 
     conn = get_db_connection()
     cursor = conn.cursor()
