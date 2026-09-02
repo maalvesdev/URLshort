@@ -26,7 +26,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Run this immediately when the app starts
 init_db()
 
 @app.route("/")
@@ -38,7 +37,7 @@ def shorten_url():
     data = request.get_json()
     original_url = data.get("original_url")
     custom_alias = data.get("custom_alias")
-    expires_in_hours = data.get("expires_in_hours") # Can be 1, 24, or None
+    expires_in_hours = data.get("expires_in_hours")
 
     if not original_url:
         return jsonify({"error": "Please provide an original_url"}), 400
@@ -61,7 +60,7 @@ def shorten_url():
     if expires_in_hours:
         expires_at = int(time.time() + (int(expires_in_hours) * 3600))
 
-    # Save to database
+    # SAVE TO DATABASE
     cursor.execute(
         "INSERT INTO urls (short_code, original_url, expires_at) VALUES (?, ?, ?)", 
         (short_code, original_url, expires_at)
