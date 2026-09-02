@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 100%; max-width: 400px; }
+        input, select { width: 90%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; width: 90%; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 20px; font-weight: bold; }
+        .error { color: red; font-size: 14px; margin-bottom: 10px; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>URL Shortener</h2>
+    <div id="errorMsg" class="error"></div>
+    
+    <input type="url" id="longUrl" placeholder="Paste your long link here..." required>
+    
+    <input type="text" id="customAlias" placeholder="Custom alias (optional)">
+    
+    <select id="expiryTime">
+        <option value="">Never expire</option>
+        <option value="1">Expire in 1 Hour</option>
+        <option value="24">Expire in 24 Hours</option>
+        <option value="168">Expire in 7 Days</option>
+    </select>
+
+    <button onclick="shortenUrl()">Shorten</button>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    async function shortenUrl() {
+        const urlInput = document.getElementById('longUrl').value;
+        const customAlias = document.getElementById('customAlias').value;
+        const expiryTime = document.getElementById('expiryTime').value;
+        
+        const resultDiv = document.getElementById('result');
+        const errorDiv = document.getElementById('errorMsg');
+
+        resultDiv.innerHTML = "";
+        errorDiv.innerText = "";
+
+        if (!urlInput) {
+            errorDiv.innerText = "Please enter a URL!";
+            return;
+        }
+
+        const response = await fetch('/api/shorten', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                original_url: urlInput,
+                custom_alias: customAlias,
+                expires_in_hours: expiryTime
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            resultDiv.innerHTML = `Success! <br><br> <a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+        } else {
+            errorDiv.innerText = data.error || "Something went wrong.";
+        }
+    }
+</script>
+
+</body>
+</html>
